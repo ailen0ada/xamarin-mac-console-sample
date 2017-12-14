@@ -1,4 +1,6 @@
-﻿using AppKit;
+﻿using System;
+using System.CommandLine;
+using AppKit;
 
 namespace ConsoleSample
 {
@@ -6,8 +8,24 @@ namespace ConsoleSample
     {
         static void Main(string[] args)
         {
-            NSApplication.Init();
-            NSApplication.Main(args);
+            var input = string.Empty;
+
+            ArgumentSyntax.Parse(args, syntax =>
+            {
+                syntax.DefineOption("i|input", ref input, true, "Something interesting to read.");
+
+                syntax.ErrorOnUnexpectedArguments = false;
+            });
+
+            if (string.IsNullOrEmpty(input))
+            {
+                NSApplication.Init();
+                NSApplication.Main(args);
+            }
+            else
+            {
+                Console.WriteLine($"{input.Length} - {input}");
+            }
         }
     }
 }
